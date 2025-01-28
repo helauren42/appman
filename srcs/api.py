@@ -18,22 +18,19 @@ logging.basicConfig(
     ]
 )
 
-@app.get("/")
+@app.get()
 def home():
     return ("hello world")
 
-@app.post("/addApp/{name}")
+@app.post( + "addApp/{name}")
 def activate(request: Request):
     pass
-    
 
 # @app.post("/addApp/{name}")
 # def add("")
 
-
 def main():
     uvicorn.run(app, host=HOST , port=PORT)
-
 
 if __name__ == "__main__":
     main()
