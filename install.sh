@@ -25,4 +25,20 @@ while [[ $answered == 1 ]]; do
     fi
 done
 
+echo "Do you want a desktop application? y/n"
+
+answered=1
+while [[ $answered == 1 ]]; do
+    if [[ $answer == "y" || $answer == "Y" || $answer == "yes" || $answer == "Yes" ]]; then
+        answered=0
+        createDesktopApp=0
+    elif [[ $answer == "n" || $answer == "N" || $answer == "no" || $answer == "No" ]]; then
+        answered=0
+        createDesktopApp=1
+done
+
+if [[ $createDesktopApp == 0 ]]; then
+    mv appman.desktop ./
+fi
+
 echo "Done"
