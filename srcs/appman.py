@@ -35,8 +35,7 @@ class AppMan():
     def __init__(self):
         buildDirectories()
         self.db: Database = Database()
-        # self.db.findAppNames()
-        # self.startActiveApps(self.db.app_names)
+        self.startActiveApps(self.db.getActiveApps())
 
     def startActiveApps(self, apps: list[str]):
         for app in apps:
