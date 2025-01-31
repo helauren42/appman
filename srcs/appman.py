@@ -1,17 +1,15 @@
-from fastapi import FastAPI, Request, Response, Query
 import uvicorn
 import logging
 from abc import ABC
 import subprocess
 from sys import exit
 
-# from const import HOST, PORT, DB_FILE, BIN_DIR
+# from const import HOST, PORT, DB_FILE, RUN_DIR
 from const import HOST, PORT, Paths
 from utils import buildDirectories, isBinary
 from db import Database
 
 # GLOBALS
-app = FastAPI()
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -22,31 +20,28 @@ logging.basicConfig(
 )
 
 class AbstractAppMan(ABC):
-    def startApp(FILE: str):
-        if not FILE.endswith(".py") and not FILE.endswith(".sh") and not isBinary(FILE):
-            logging.error(f'File format is wrong {FILE} must be a ".py", ".sh" or a binary')
+    def startApp(filename: str):
+        logging.debug("Start app called for {filename}")
+        if not filename.endswith(".py") and not filename.endswith(".sh") and not isBinary(filename):
+            logging.error(f'filename format is wrong {filename} must be a ".py", ".sh" or a binary')
             return
-        if FILE.endswith(".py"):
-            result = subprocess.run(["python3", FILE], stderr=subprocess.PIPE, close_fds=True, cwd=BIN_DIR)
+        if filename.endswith(".py"):
+            result = subprocess.run(["python3", filename], stderr=subprocess.PIPE, close_fds=True, cwd=RUN_DIR)
         else:
-            result = subprocess.run([FILE], stderr=subprocess.PIPE, cwd=Paths.BIN_DIR)
+            result = subprocess.run([filename], stderr=subprocess.PIPE, cwd=Paths.RUN_DIR)
 
 class AppMan():
     def __init__(self):
         buildDirectories()
         self.db: Database = Database()
-        self.startActiveApps(self.db.getActiveApps())
+        logging.debug("db built")
+        self.startActiveApps()
 
-    def startActiveApps(self, apps: list[str]):
-        for app in apps:
-            try:
-                startApp(app)
-            except Exception as e:
-                logging.error(f"Could not execute subprocess to start app: {e}")
-
-def main():
-    appman: AppMan = AppMan()
-    uvicorn.run(app, host=HOST , port=PORT)
-
-if __name__ == "__main__":
-    main()
+    def startActiveApps(self):
+        for name, app in self.db.apps.items():
+            if app.active:
+                try:
+                    logging.info(f"Launching: {name}, filename: {app.run}")
+                    self.startApp(app.run)
+                except Exception as e:
+                    logging.error(f"Could not execute subprocess to start app: {e}")

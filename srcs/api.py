@@ -1,14 +1,23 @@
 import uvicorn
 import logging
 
-from const import HOST, PORT, Paths
 from db import Database
-from appman import app, AppMan
 from utils import buildDirectories, isBinary
+from const import HOST, PORT, Paths
+from appman import AppMan
+from fastapi import FastAPI
+from fastapi.responses import Response, JSONResponse
+
+app = FastAPI()
+appman: AppMan = AppMan()
 
 @app.get("/")
 def home():
     return ("hello world")
+
+@app.get("/activate/list")
+def list():
+    return JSONResponse()
 
 @app.post("/activate/{name}")
 def activate():
@@ -19,7 +28,6 @@ def deactivate():
     pass
 
 def main():
-    appman: AppMan = AppMan()
     uvicorn.run(app, host=HOST , port=PORT)
 
 if __name__ == "__main__":
