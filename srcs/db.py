@@ -3,6 +3,7 @@ import subprocess
 import os
 import logging
 import json
+import json
 
 from const import Paths
 
@@ -20,6 +21,12 @@ class App():
         self.active = _active
 
 class Database():
+    def __str__(self):
+        ret = ""
+        for key, app in self.apps.items():
+            ret += f'{key}: {str(app)} + "\n"'
+        return ret
+
     def __str__(self):
         ret = ""
         for key, app in self.apps.items():
@@ -88,6 +95,8 @@ class Database():
         result = subprocess.run(["ls -d */"], shell=True, capture_output=True, text=True, cwd=Paths.APPS_DIR.value)
         logging.info(f"Application directories found: {result.stdout}")
         if result.stdout is None or result.stdout == "":
+        logging.info(f"Application directories found: {result.stdout}")
+        if result.stdout is None or result.stdout == "":
             return None
         app_dir_names = result.stdout.split()
         for app_dir in app_dir_names:
@@ -106,7 +115,10 @@ class Database():
                     self.apps[name] = app
             except Exception as e:
                 logging.warning(f"metdata.json error: {e}")
+                logging.warning(f"metdata.json error: {e}")
                 continue
+        if len(self.apps) > 0:
+            return self.apps
         if len(self.apps) > 0:
             return self.apps
         return None
