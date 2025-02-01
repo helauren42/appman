@@ -7,8 +7,6 @@ PORT = 5698
 
 HOME_DIR = os.path.expanduser("~")
 
-# DIR AND FILE RELATIVE PATHS TO SRCS/
-
 class Paths(enum.Enum):
     APP_ROOT = os.path.join(HOME_DIR + "/.local/appman")
     LOG_DIR = os.path.join(APP_ROOT + "/logger/")

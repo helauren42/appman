@@ -1,0 +1,10 @@
+[Unit]
+Description=The api for appman
+
+[Service]
+ExecStart=%h/.local/appman/appman/appman_api.sh
+WorkingDirectory=%h/.local/appman/appman
+Restart=always
+
+[Install]
+WantedBy=default.target

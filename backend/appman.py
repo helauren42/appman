@@ -3,6 +3,7 @@ import logging
 from abc import ABC
 import subprocess
 from sys import exit
+from typing import Optional
 
 # from const import HOST, PORT, DB_FILE, RUN_DIR
 from const import HOST, PORT, Paths
@@ -30,12 +31,25 @@ class AbstractAppMan(ABC):
         else:
             result = subprocess.run([filename], stderr=subprocess.PIPE, cwd=Paths.RUN_DIR)
 
-class AppMan():
+class AppMan(AbstractAppMan):
     def __init__(self):
         buildDirectories()
         self.db: Database = Database()
         logging.debug("db built")
         self.startActiveApps()
+
+    def ApiRequests(self, request: str, arg: Optional[str] = None):
+        if request == "refresh":
+            self.db.updateApps()
+        elif request == "activate":
+            self.db.activateApp(arg)
+        elif request == "deactivate":
+            self.db.deactivateApp(arg)
+        elif request == "list":
+            ret = {}
+            for name, app in self.db.apps.items():
+                ret[name] = app.to_dict()
+            return ret
 
     def startActiveApps(self):
         for name, app in self.db.apps.items():
