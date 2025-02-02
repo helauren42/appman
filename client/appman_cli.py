@@ -24,8 +24,10 @@ class output(ABC):
             content = response.content.decode('utf-8')
             data = json.loads(content)
             for key, value in data.items():
-                print(f"key: {key}\nvalue: {value}")
+                print("-" * 80)
                 print(f"APP: {key}")
+                print(f"Run: {value["run"]}")
+                print(f"Program Name: {value["program_name"]}")
             if value["active"]:
                 print("Status: \033[92mactive\033[0m")
             else:
