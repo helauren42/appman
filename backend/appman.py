@@ -7,7 +7,7 @@ from typing import Optional
 
 # from const import HOST, PORT, DB_FILE, RUN_DIR
 from const import HOST, PORT, Paths
-from utils import buildDirectories, isBinary
+from utils import buildDirectories, isBinary, isRunning
 from db import Database
 
 # GLOBALS
@@ -19,14 +19,25 @@ class AbstractAppMan(ABC):
             logging.error(f'script_name format is wrong {script_name} must be a ".py", ".sh" or a binary')
             return
         else:
-            isRunning = subprocess.run([f"ps aux | grep {program_name} | grep -v grep"], shell=True, capture_output=True, text=True)
-            print(f"IS RUNNING: {isRunning.stdout}")
-            if isRunning.stdout == "":
-                result = subprocess.run([Paths.RUN_DIR.value + script_name, "-a"], stderr=subprocess.PIPE)
+            if not isRunning(program_name=program_name):
+                path = Paths.RUN_DIR.value + script_name
+                result = subprocess.run([path, "--activate"], capture_output=True)
                 logging.info(f"Started application: {script_name} succesfully")
             else:
                 logging.info(f"Application {script_name} already running so not started")
                 # raise Exception(f"{program_name} already running")
+
+    def stopApp(self, script_name: str, program_name: str):
+        logging.debug(f"Start app called for {Paths.RUN_DIR.value + script_name}")
+        if not script_name.endswith(".sh") and not isBinary(script_name):
+            logging.error(f'script_name format is wrong {script_name} must be a ".py", ".sh" or a binary')
+            return
+        else:
+            if isRunning(program_name=program_name):
+                result = subprocess.run([Paths.RUN_DIR.value + script_name, "--deactivate"], stderr=subprocess.PIPE)
+                logging.info(f"Stopped application: {script_name} succesfully")
+            else:
+                logging.info(f"Application {script_name} not running so not stopped")
 
 class AppMan(AbstractAppMan):
     def __init__(self):
@@ -48,6 +59,7 @@ class AppMan(AbstractAppMan):
             self.startApp(self.db.apps[arg].run, self.db.apps[arg].program_name)
         elif request == "deactivate":
             self.db.deactivateApp(arg)
+            self.stopApp(self.db.apps[arg].run, self.db.apps[arg].program_name)
 
     def startActiveApps(self):
         logging.info(f"start active apps called")

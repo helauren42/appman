@@ -55,7 +55,6 @@ class output(ABC):
         print(f'{response.content.decode('utf-8')}')
         print(f"Status code: {response.status_code}")
 
-
 def makeRequest(method: str, url):
     try:
         response = requests.request(method, url)
@@ -74,7 +73,8 @@ def process_args(args):
         response = makeRequest("POST", f'http://{HOST}:{PORT}/activate/{args.activate}')
         output.activate(response=response)
     if args.deactivate:
-        response = makeRequest("POST", f'http://{HOST}:{PORT}/activate/{args.deactivate}')
+        response = makeRequest("POST", f'http://{HOST}:{PORT}/deactivate/{args.deactivate}')
+        output.deactivate(response=response)
 
 def main():
     args, parser = parse()

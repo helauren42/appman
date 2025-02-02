@@ -44,11 +44,11 @@ def deactivate(name: str):
     try:
         appman.ApiRequests("deactivate", name)
     except Exception as e:
-        return Response(content=f"{name} not found", status_code=400)
+        return Response(content=f"{name}: {e}", status_code=400)
     return Response(content=f"{name} deactivated", status_code=200)
 
 def main():
-    uvicorn.run("api:app", host=HOST , port=PORT, reload=True, workers=1)
+    uvicorn.run("api:app", host=HOST , port=PORT, reload=True)
 
 if __name__ == "__main__":
     main()

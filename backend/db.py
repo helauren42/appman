@@ -6,6 +6,7 @@ import json
 from abc import ABC
 
 from const import Paths
+from utils import isRunning
 
 class App():
     def __str__(self):
@@ -105,10 +106,10 @@ class Database(AbstractDatabase):
         if self.apps.get(name) is None:
             logging.error("Wrong app name, app not found, could not ativate")
             raise Exception("App not found")
-        if self.apps[name].active == True:
+        if self.apps[name].active and isRunning(self.apps[name].program_name):
             logging.error(f"{name}: already active")
             raise Exception("Already active")
-        logging.info("setting {name} to  True")
+        logging.info("setting {name}.active to True")
         self.apps[name].setActive(True)
         self.initDbCursor()
         print("PRE activate app:")
@@ -117,11 +118,19 @@ class Database(AbstractDatabase):
         self.connect.commit()
 
     def deactivateApp(self, name: str):
-        if name in self.apps:
-            self.apps[name].setActive(False)
-        else:
+        if name not in self.apps:
             logging.error("Wrong app name, app not found, could not ativate")
             raise Exception("App not found")
+        if self.apps[name].active == False:
+            logging.error(f"{name}: already inactive")
+            raise Exception("Already inactive")
+        logging.info("setting {name}.active to True")
+        self.apps[name].setActive(False)
+        self.initDbCursor()
+        print("PRE deactivate app:")
+        self.debugPrintTable()
+        self.cursor.execute("UPDATE applications SET name = ?, active = ?", (name, False))
+        self.connect.commit()
 
     def updateApps(self):
         self.findLocalApps() # updates self.apps with current local apps

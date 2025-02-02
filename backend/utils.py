@@ -3,6 +3,13 @@ import sqlite3
 # from const import DB_DIR, DB_FILE, LOG_DIR, RUN_DIR, APPS_DIR
 from const import Paths
 import logging
+import subprocess
+
+def isRunning(program_name: str) -> bool:
+    result = subprocess.run([f"ps aux | grep {program_name} | grep -v grep | grep -v appman_cli.py"], shell=True, capture_output=True, text=True)
+    if result.stdout == "":
+        return False
+    return True
 
 def isBinary(filename: str, blocksize=1024):
     with open(filename, 'rb') as f:
