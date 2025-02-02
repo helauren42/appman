@@ -12,50 +12,49 @@ from db import Database
 
 # GLOBALS
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    handlers=[
-        logging.FileHandler("../.logger.log", mode="w"),
-        logging.StreamHandler()
-    ]
-)
-
 class AbstractAppMan(ABC):
-    def startApp(filename: str):
-        logging.debug("Start app called for {filename}")
-        if not filename.endswith(".py") and not filename.endswith(".sh") and not isBinary(filename):
-            logging.error(f'filename format is wrong {filename} must be a ".py", ".sh" or a binary')
+    def startApp(self, script_name: str, program_name: str):
+        logging.debug(f"Start app called for {Paths.RUN_DIR.value + script_name}")
+        if not script_name.endswith(".sh") and not isBinary(script_name):
+            logging.error(f'script_name format is wrong {script_name} must be a ".py", ".sh" or a binary')
             return
-        if filename.endswith(".py"):
-            result = subprocess.run(["python3", filename], stderr=subprocess.PIPE, close_fds=True, cwd=RUN_DIR)
         else:
-            result = subprocess.run([filename], stderr=subprocess.PIPE, cwd=Paths.RUN_DIR)
+            isRunning = subprocess.run([f"ps aux | grep {program_name} | grep -v grep"], shell=True, capture_output=True, text=True)
+            print(f"IS RUNNING: {isRunning.stdout}")
+            if isRunning.stdout == "":
+                result = subprocess.run([Paths.RUN_DIR.value + script_name, "-a"], stderr=subprocess.PIPE)
+                logging.info(f"Started application: {script_name} succesfully")
+            else:
+                logging.info(f"Application {script_name} already running so not started")
+                # raise Exception(f"{program_name} already running")
 
 class AppMan(AbstractAppMan):
     def __init__(self):
         buildDirectories()
         self.db: Database = Database()
-        logging.debug("db built")
         self.startActiveApps()
 
     def ApiRequests(self, request: str, arg: Optional[str] = None):
-        if request == "refresh":
-            self.db.updateApps()
-        elif request == "activate":
-            self.db.activateApp(arg)
-        elif request == "deactivate":
-            self.db.deactivateApp(arg)
-        elif request == "list":
+        if request == "list":
             ret = {}
             for name, app in self.db.apps.items():
                 ret[name] = app.to_dict()
             return ret
+        elif request == "refresh":
+            self.db.updateApps()
+        elif request == "activate":
+            print(f"pre: {arg}")
+            self.db.activateApp(arg)
+            self.startApp(self.db.apps[arg].run, self.db.apps[arg].program_name)
+        elif request == "deactivate":
+            self.db.deactivateApp(arg)
 
     def startActiveApps(self):
+        logging.info(f"start active apps called")
         for name, app in self.db.apps.items():
             if app.active:
                 try:
                     logging.info(f"Launching: {name}, filename: {app.run}")
-                    self.startApp(app.run)
+                    self.startApp(app.run, app.program_name)
                 except Exception as e:
                     logging.error(f"Could not execute subprocess to start app: {e}")

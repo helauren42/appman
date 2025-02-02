@@ -9,12 +9,13 @@ from const import Paths
 
 class App():
     def __str__(self):
-        return (f'run: {self.run}, description: {self.description}, settings: {self.settings}')
+        return (f'active: {self.active}, run: {self.run}, description: {self.description}, settings: {self.settings}')
 
-    def __init__(self, _run, _description, _settings):
+    def __init__(self, _run, _program_name, _description, _settings=None):
         self.run: str = _run
+        self.program_name = _program_name
         self.description: str = _description
-        self.active: bool
+        self.active: bool = False
         self.settings: Optional[str] = _settings # .sh
     
     def setActive(self, _active: bool):
@@ -23,6 +24,8 @@ class App():
     def to_dict(self):
         return {
             "description":self.description,
+            "run":self.run,
+            "program_name":self.program_name,
             "active":self.active,
             "settings":self.settings
         }
@@ -60,7 +63,7 @@ class AbstractDatabase():
                     if "run" not in data or "name" not in data or "description" not in data:
                         logging.warning(f'metadata.json format not valid, could not find one of "run", "name", "description" elements')
                     settings = None if "settings" not in data else data["settings"]
-                    app = App(data["run"], data["description"], settings)
+                    app = App(data["run"], data["program_name"], data["description"], settings)
                     name = data["name"]
                     if self.apps.get(name) is not None:
                         logging.warning(f"found duplicate app name: {name}")
@@ -98,14 +101,22 @@ class Database(AbstractDatabase):
         logging.info(f'Apps: {self.apps}')
         self.debugPrintTable()
     
-    def activateApp(name: str):
-        if name in self.apps:
-            self.apps[name].setActive(True)
-        else:
+    def activateApp(self, name: str):
+        if self.apps.get(name) is None:
             logging.error("Wrong app name, app not found, could not ativate")
             raise Exception("App not found")
+        if self.apps[name].active == True:
+            logging.error(f"{name}: already active")
+            raise Exception("Already active")
+        logging.info("setting {name} to  True")
+        self.apps[name].setActive(True)
+        self.initDbCursor()
+        print("PRE activate app:")
+        self.debugPrintTable()
+        self.cursor.execute("UPDATE applications SET name = ?, active = ?", (name, True))
+        self.connect.commit()
 
-    def deactivateApp(name: str):
+    def deactivateApp(self, name: str):
         if name in self.apps:
             self.apps[name].setActive(False)
         else:
@@ -118,6 +129,7 @@ class Database(AbstractDatabase):
         rows = self.cursor.fetchall()
         db_app_names = []
         for row in rows:
+            print(f"ROW: {row}")
             if row[0] not in self.apps:
                 logging.info(f"Deleting {row[0]} from db")
                 self.cursor.execute("DELETE FROM applications WHERE name = ?", (row[0],))

@@ -31,7 +31,8 @@ Components:
 
 run = the script's filename inside appman/bin/ to launch the application and apply settings changes
 name = name of the application displayed on the gui
-description = short description about the application (max 100 characters)
+program_name = name of the process running in shell, the main one should be enough
+description = short description about the application
 settings(optional) = create a .sh settings launcher, input the relative path from your projects directory in app to your settings ".sh" launcher
 
 ### Run

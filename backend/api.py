@@ -1,7 +1,6 @@
 import uvicorn
 import logging
 
-from db import Database
 from utils import buildDirectories, isBinary
 from const import HOST, PORT, Paths
 from appman import AppMan
@@ -11,37 +10,45 @@ from fastapi.responses import Response, JSONResponse
 app = FastAPI()
 appman: AppMan = AppMan()
 
-@app.get("/")
+@app.get("/help")
 def home():
+    logging.info("request to /help")
     return ("hello world")
 
 @app.get("/list")
 def list():
-    return JSONResponse(status_code=200, content=appman.db.apps)
+    logging.info("request to /list")
+    return JSONResponse(status_code=200, content=appman.ApiRequests("list"))
 
 @app.post("/refresh")
 def refresh():
-    appman.refresh()
+    logging.info("request to /refresh")
+    try:
+        appman.ApiRequests("refresh")
+    except Exception as e:
+        return Response(status_code=500, content=f"{e}")
     return Response(status_code=200)
 
 @app.post("/activate/{name}")
-def activate():
+def activate(name: str):
+    logging.info(f"request to /activate/{name}")
     try:
-        appman.ApiRequests("activate", name) == 400
+        appman.ApiRequests("activate", name)
     except Exception as e:
-        return Response(content=f"{name} not found", status_code=400)
+        return Response(content=f"Error activating {name}: {e}", status_code=400)
     return Response(content=f"{name} activated", status_code=200)
 
 @app.post("/deactivate/{name}")
-def deactivate():
+def deactivate(name: str):
+    logging.info(f"request to /deactivate/{name}")
     try:
-        appman.ApiRequests("deactivate", name) == 400
+        appman.ApiRequests("deactivate", name)
     except Exception as e:
         return Response(content=f"{name} not found", status_code=400)
     return Response(content=f"{name} deactivated", status_code=200)
 
 def main():
-    uvicorn.run(app, host=HOST , port=PORT)
+    uvicorn.run("api:app", host=HOST , port=PORT, reload=True, workers=1)
 
 if __name__ == "__main__":
     main()
