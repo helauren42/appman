@@ -24,13 +24,14 @@ def main():
     while True:
         print(PROMPT, end=" ")
         read = input().strip()
-        mode, parsed = ("", {}) 
+        mode, parsed = ("", {})
         try:
             mode, parsed = Parser.parse(read.split())
         except Exception as e:
             if e != "help":
                 print(f"Error: {e}")
             continue
+        print(f"mode: {mode}")
         if mode == Parser.parsedMode.APPMAN:
             process_args(parsed)
         else:
@@ -39,9 +40,9 @@ def main():
                 print("parsed: ", parsed)
                 path = Paths.RUN_DIR.value + parsed[0]
                 if len(parsed) > 1:
-                    cmd = path + parsed[1:]
+                    cmd = [path] + parsed[1:]
                 else:
-                    cmd = path
+                    cmd = [path]
                 print("cmd: ", cmd)
                 result = subprocess.run(cmd, capture_output=True, text=True)
                 print(result.stdout, end="")

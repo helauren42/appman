@@ -22,6 +22,7 @@ def list():
 
 @app.post("/refresh")
 def refresh():
+    global appman
     logging.info("request to /refresh")
     try:
         appman = AppMan()

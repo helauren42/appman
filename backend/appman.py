@@ -5,7 +5,6 @@ import subprocess
 from sys import exit
 from typing import Optional
 
-# from const import HOST, PORT, DB_FILE, RUN_DIR
 from const import HOST, PORT, Paths
 from utils import buildDirectories, isBinary, isRunning
 from db import Database
