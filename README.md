@@ -1,7 +1,10 @@
 # Introduction
 
-I'm building this linux app manager application because I always have ideas for customizations and creating applications to improve my linux experience and there is always this one obstacle, of I need it to start this application when I login. And instead of just enabling into systemclt every individual apps I may create so that it launches at startup. Having an app manager handle this to seamlessly activate/deactivate/install/uninstall apps and tweak app settings, in a centralized manner to have more control, will be very convenient.
-Also I run Gnome and I am not a fan of the current official extension model, forcing every application to be built in JS is very self limiting, plus JS is not known for being reliable and stable. With appman we shall finally be free to manager all the custom extensions we want that do not conform to Gnome's extension standards.
+This is a linux applications session manager.
+
+I initially had the idea for this program after I was frustrated by Gnome's extension application. For the back story I had installed a background slideshow application which caused various bugs, I noticed that it was written in JS and that a lot of other Gnome extensions were too, which I found curious but didn't think too much of it. So I managed to replicate the application without the bugs, by writing it in python, unfortunately when I thought it was time to release my background slideshow gnome application to the world I stumbled upon Gnome's regulation, which requires not only to develop official Gnome extensions in JS but by using GJS too and only created subprocesses when absolutely necessary. Under these conditions, I had no guarantee that I could reproduce my background slideshow application without developing the bugs from the one coming from the official release and plus I found the constraints very annoying. So I built my own Session manager to manage my custom Gnome extensions, hopefully others might use it too.
+
+In the process of building I decided that it shouldn't be only to manage custom Gnome extensions that do not conform official Gnome requirements, because why not make it a session manager to control all types of linux applications.
 
 # Installation
 
@@ -17,7 +20,6 @@ Lists all the applications you have installed and their current status
 activate application
 - appman --deactivate application_name
 deactivate application
-
 
 # Adding third party applications to appman
 

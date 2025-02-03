@@ -21,14 +21,14 @@ class AbstractAppMan(ABC):
         else:
             if not isRunning(program_name=program_name):
                 path = Paths.RUN_DIR.value + script_name
-                result = subprocess.run([path, "--activate"], capture_output=True)
+                subprocess.run([path, "--activate"], start_new_session=True, close_fds=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
                 logging.info(f"Started application: {script_name} succesfully")
             else:
                 logging.info(f"Application {script_name} already running so not started")
                 # raise Exception(f"{program_name} already running")
 
     def stopApp(self, script_name: str, program_name: str):
-        logging.debug(f"Start app called for {Paths.RUN_DIR.value + script_name}")
+        logging.debug(f"Stop app called for {Paths.RUN_DIR.value + script_name}")
         if not script_name.endswith(".sh") and not isBinary(script_name):
             logging.error(f'script_name format is wrong {script_name} must be a ".py", ".sh" or a binary')
             return
