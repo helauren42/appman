@@ -1,6 +1,5 @@
 import os
 import sqlite3
-# from const import DB_DIR, DB_FILE, LOG_DIR, RUN_DIR, APPS_DIR
 from const import Paths
 import logging
 import subprocess

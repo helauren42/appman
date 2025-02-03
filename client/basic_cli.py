@@ -6,17 +6,13 @@ import subprocess
 from abc import ABC, abstractstaticmethod
 import json
 from enum import Enum
+import logging
 
 HOST = "127.0.0.1"
 PORT = 5698
 
-# def parse(args: list[str]):
-#     parser = argparse.ArgumentParser(prog="appman", description="A command-line utility for appman your app manager for linux applications, official ones and none official ones.")
-#     parser.add_argument("-l", "--list", action="store_true", help="Lists all the current programs registered on appman, and their current status (active/inactive)")
-#     parser.add_argument("-r", "--refresh", action="store_true", help="Use refresh after adding a new application to the appman directory")
-#     parser.add_argument("-a", "--activate", type=str, help="Sets the program to active and appman will run its script when appman is launched")
-#     parser.add_argument("-d", "--deactivate", type=str, help="Sets the program to inactive and appman will be ignoring its run script")
-#     return (parser.parse_args(args=args), parser)
+urllib3_logger = logging.getLogger("urllib3")
+urllib3_logger.setLevel(logging.ERROR)
 
 class Parser():
     @abstractstaticmethod

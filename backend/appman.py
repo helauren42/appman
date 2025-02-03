@@ -51,8 +51,6 @@ class AppMan(AbstractAppMan):
             for name, app in self.db.apps.items():
                 ret[name] = app.to_dict()
             return ret
-        elif request == "refresh":
-            self.db.updateApps()
         elif request == "activate":
             print(f"pre: {arg}")
             self.db.activateApp(arg)

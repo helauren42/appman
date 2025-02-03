@@ -24,7 +24,7 @@ def list():
 def refresh():
     logging.info("request to /refresh")
     try:
-        appman.ApiRequests("refresh")
+        appman = AppMan()
     except Exception as e:
         return Response(status_code=500, content=f"{e}")
     return Response(status_code=200)

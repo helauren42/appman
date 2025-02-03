@@ -27,21 +27,23 @@ def main():
         mode, parsed = ("", {}) 
         try:
             mode, parsed = Parser.parse(read.split())
-            print(f"type of parsed: {type(parsed)}")
         except Exception as e:
             if e != "help":
                 print(f"Error: {e}")
             continue
-        print(f"mode: {mode}")
         if mode == Parser.parsedMode.APPMAN:
-            if parsed["list"]["on"] == True:
-                print("list is on")
-            else:
-                print("list is off")
             process_args(parsed)
         else:
             try:
-                result = subprocess.run(parsed, capture_output=True, text=True, cwd=Paths.APPS_DIR.value)
+                print("path: ", Paths.RUN_DIR.value)
+                print("parsed: ", parsed)
+                path = Paths.RUN_DIR.value + parsed[0]
+                if len(parsed) > 1:
+                    cmd = path + parsed[1:]
+                else:
+                    cmd = path
+                print("cmd: ", cmd)
+                result = subprocess.run(cmd, capture_output=True, text=True)
                 print(result.stdout, end="")
                 print(result.stderr, end="")
                 print("\n", end="")
