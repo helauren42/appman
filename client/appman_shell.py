@@ -15,8 +15,6 @@ HOST = "127.0.0.1"
 PORT = 5698
 
 def sigterm_handler(signum, frame):
-    print("sigterm handler called")
-    print(f"fram: {frame}")
     sys.exit(1)
 
 def main():
@@ -31,7 +29,6 @@ def main():
             if e != "help":
                 print(f"Error: {e}")
             continue
-        print(f"mode: {mode}")
         if mode == Parser.parsedMode.APPMAN:
             process_args(parsed)
         else:

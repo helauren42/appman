@@ -51,7 +51,6 @@ class AppMan(AbstractAppMan):
                 ret[name] = app.to_dict()
             return ret
         elif request == "activate":
-            print(f"pre: {arg}")
             self.db.activateApp(arg)
             self.startApp(self.db.apps[arg].run, self.db.apps[arg].program_name)
         elif request == "deactivate":

@@ -74,6 +74,9 @@ class output(ABC):
     def list(response):
         if response.status_code == 200:
             content = response.content.decode('utf-8')
+            if content == "" or content == "{}":
+                print("No applications registered")
+                return
             data = json.loads(content)
             for key, value in data.items():
                 print("-" * 80)
@@ -111,6 +114,7 @@ class output(ABC):
 def makeRequest(method: str, url):
     try:
         response = requests.request(method, url)
+        print(f"response: {response}")
     except Exception as e:
         print(f"Request failed: {e}")
         raise
@@ -131,12 +135,3 @@ def process_args(args: dict[str, dict]):
             response = makeRequest("POST", f'http://{HOST}:{PORT}/deactivate/{arg}')
         output.deactivate(response=response)
 
-# def main():
-#     args, parser = parse()
-#     if len(sys.argv) <= 1:
-#         parser.print_help()
-#         sys.exit(0)
-#     process_args(args)
-
-# if __name__ == "__main__":
-#     main()

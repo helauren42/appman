@@ -1,3 +1,5 @@
+STILL IN DEVELOPMENT
+
 # Introduction
 
 This is a linux applications session manager.

@@ -21,7 +21,7 @@ class Paths(enum.Enum):
 logging.basicConfig(
     level=logging.DEBUG,
     handlers=[
-        logging.FileHandler(Paths.LOG_DIR.value + ".logger.log", mode="w"),
+        logging.FileHandler(Paths.LOG_DIR.value + ".shell-logger.log", mode="w"),
         logging.StreamHandler()
     ]
 )

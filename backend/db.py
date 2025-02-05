@@ -112,7 +112,6 @@ class Database(AbstractDatabase):
         logging.info("setting {name}.active to True")
         self.apps[name].setActive(True)
         self.initDbCursor()
-        print("PRE activate app:")
         self.debugPrintTable()
         self.cursor.execute("UPDATE applications SET name = ?, active = ?", (name, True))
         self.connect.commit()
@@ -127,7 +126,6 @@ class Database(AbstractDatabase):
         logging.info("setting {name}.active to True")
         self.apps[name].setActive(False)
         self.initDbCursor()
-        print("PRE deactivate app:")
         self.debugPrintTable()
         self.cursor.execute("UPDATE applications SET name = ?, active = ?", (name, False))
         self.connect.commit()
@@ -138,7 +136,6 @@ class Database(AbstractDatabase):
         rows = self.cursor.fetchall()
         db_app_names = []
         for row in rows:
-            print(f"ROW: {row}")
             if row[0] not in self.apps:
                 logging.info(f"Deleting {row[0]} from db")
                 self.cursor.execute("DELETE FROM applications WHERE name = ?", (row[0],))

@@ -1,7 +1,7 @@
 import uvicorn
 import logging
 
-from utils import buildDirectories, isBinary
+from utils import isBinary
 from const import HOST, PORT, Paths
 from appman import AppMan
 from fastapi import FastAPI
@@ -9,6 +9,14 @@ from fastapi.responses import Response, JSONResponse
 
 app = FastAPI()
 appman: AppMan = AppMan()
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    handlers=[
+        logging.FileHandler(Paths.LOG_DIR.value + ".logger.log", mode="w"),
+        logging.StreamHandler()
+    ]
+)
 
 @app.get("/help")
 def home():

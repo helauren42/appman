@@ -1,1 +1,0 @@
-when appman cli is launched it launches its own shell from that shell it is possible to execute the run scripts in case those take arguments essentially making them a cli tot heir own application
