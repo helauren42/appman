@@ -29,8 +29,6 @@ echo "[Service]" >> service/appman_api.service
 echo "ExecStart=$HOME/.local/appman/api/appman_api.sh" >> service/appman_api.service
 echo "WorkingDirectory=$HOME/.local/appman/api" >> service/appman_api.service
 echo "Restart=always" >> service/appman_api.service
-echo "User=$USER" >> service/appman_api.service
-echo "Group=$USER" >> service/appman_api.service
 
 echo "[Install]" >> service/appman_api.service
 echo "WantedBy=default.target" >> service/appman_api.service
@@ -43,7 +41,9 @@ mkdir -p $HOME/.config/systemd/user/
 echo "starting appman_api as a user service"
 systemctl --user daemon-reload
 systemctl --user start appman_api.service
+systemctl --user enable appman_api.service
 
-echo "Run \"systemctl --user status appman_api.service\" to make sure the appman_api service is running"
+echo "Run \"systemctl --user status appman_api.service\" and \"systemctl --user is-enabled appman_api.service\" to make sure the appman_api service is running"
+echo "in case of issues run \"journalctl --user -xe appman_api.service\""
 
 echo "Installation complete"

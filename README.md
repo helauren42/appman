@@ -1,6 +1,8 @@
+# AppMan - Linux Application Session Manager
+
 STILL IN DEVELOPMENT
 
-# Introduction
+## Introduction
 
 This is a linux applications session manager.
 
@@ -8,45 +10,102 @@ I initially had the idea for this program after I was frustrated by Gnome's exte
 
 In the process of building I decided that it shouldn't be only to manage custom Gnome extensions that do not conform official Gnome requirements, because why not make it a session manager to control all types of linux applications.
 
-# Installation
+## Features
 
-run install.sh in your terminal and answer the prompts.
-You will find uninstall.sh inside /appman/ in case you want to remove the program and all of its components.
+CLI and API Support: Control applications via a command-line interface shell or a REST API.<br>
+Application Management: Start, stop, and manage Linux applications with ease.<br>
+Custom Gnome Extensions: Run custom Gnome extensions without adhering to Gnome's strict requirements.<br>
+Third-Party Integration: Easily integrate third-party applications into AppMan.<br>
+Settings Management: Optional support for custom settings managers for each application.<br>
 
-# CLI USAGE
+## Installation
 
-- appman list
-Lists all the applications you have installed and their current status
+Clone the repository or download the source code.<br>
+<br>
+Run the install.sh script in your terminal:<br>
+Follow the prompts to complete the installation.<br>
+<br>
+The installation script will:<br>
+Create the necessary directories in ~/.local/appman.<br>
+Install the AppMan binary in ~/.local/bin/appman.<br>
+Set up the AppMan API as a user service using systemd.<br>
 
-- appman --activate application_name
-activate application
-- appman --deactivate application_name
-deactivate application
+## Uninstallation
 
-# Adding third party applications to appman
+To uninstall AppMan, run the uninstall.sh script, during the installation it is copied over to your appman directory:<br>
+~/.local/appman/uninstall.sh<br>
+
+## CLI SHELL USAGE
+
+To start the appman shell type "appman" in your terminal. A prompt "appman$>" will present itself to you.<br>
+In case appman command does not work make sure you have "$HOME/.local/bin" in your environment with "echo $PATH".
+
+### Running an executable
+
+If no management options are specified, appman assumes you want to run an executable.<br><br>
+
+appman$> program.sh [arguments...]<br><br>
+
+program.sh represents the name of the program inside appman/run/<br>
+
+### Application Management Commands
+
+These commands allow you to manage registered applications.<br>
+<br>
+1. List Registered Applications<br>
+Lists all registered applications along with their status (active/inactive).<br>
+<br>
+appman$> list<br>
+<br>
+Example output:<br>
+--------------------------------------------------------------------------------<br>
+APP: MyApp<br>
+Run: myapp.sh<br>
+Program Name: MyApp<br>
+Status: active<br>
+Description: A sample application<br>
+--------------------------------------------------------------------------------<br>
+<br>
+2. Refresh Application List<br>
+Reloads the list of registered applications.<br>
+
+appman$> refresh<br>
+
+3. Activating and Deactivating applications
+
+Starts or stops application. If application set to active, appman will launch it at login.<br>
+
+Activating:<br>
+appman$> activate <program1> <program2> ...<br>
+<br>
+Deactivating:<br>
+appman$> deactivate <program1> <program2> ...<br>
+<br>
 
 ### add your program's binary or entry point script inside of /appman/bin
-Create a bash script that serves as an entry point to your program. With a bash script you can define your arguments, flags and compiler as needed for every language.
+
+Create a bash script that serves as an entry point to your program. With a bash script you can define your arguments, flags and compiler as needed for every language.<br>
 
 ### Create a metadata.json
-The metadata json is crucial for your application to launch and display correctly on the appman GUI.
 
-Components:
+The metadata json is crucial for your application to launch and display correctly on the appman GUI.<br>
 
-run = the script's filename inside appman/bin/ to launch the application and apply settings changes
-name = name of the application displayed on the gui
-program_name = name of the process running in shell, the main one should be enough
-description = short description about the application
-settings(optional) = create a .sh settings launcher, input the relative path from your projects directory in app to your settings ".sh" launcher
+Components:<br>
+<br>
+run = the script's filename inside appman/bin/ to launch the application and apply settings changes<br>
+name = name of the application displayed on the gui<br>
+program_name = name of the process running in shell, the main one should be enough<br>
+description = short description about the application<br>
+settings(optional) = create a .sh settings launcher, input the relative path from your projects directory in app to your settings ".sh" launcher<br>
 
 ### Run
 
-The script needs to be able to take arguments --activate and --deactivate, as whenever an application is activated or deactivated on appman, then appman will run this script and pass --activate or --deactivate as argument, the activation and deactivation of the processes can be handled as you wish.
+The script needs to be able to take arguments --activate and --deactivate, as whenever an application is activated or deactivated on appman, then appman will run this script and pass --activate or --deactivate as argument, the activation and deactivation of the processes can be handled as you wish.<br>
 
 ### Settings program [Optional]
-To give you the freedom to build your own settings manager program for your application it should be built as a standalone, that can be run by clicking on the settings button on the appman application. I don't want to enforce my own "appman settings page builder module" that would discourage some developers I believe while restricting freedom too.
-Here again you create a .sh as launcher for your settings manager application.
-<!-- If you want to make it match the design of appman look at the "Design Guide" section in this README -->
+To give you the freedom to build your own settings manager program for your application it should be built as a standalone, that can be run by clicking on the settings button on the appman application. I don't want to enforce my own "appman settings page builder module" that would discourage some developers I believe while restricting freedom too.<br>
+Here again you create a .sh as launcher for your settings manager application.<br>
+<!-- If you want to make it match the design of appman look at the "Design Guide" section in this README --><br>
 
 ## Recommended
 Put all your application's necessary dependencies inside of /appman/apps.
