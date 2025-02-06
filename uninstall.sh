@@ -1,6 +1,6 @@
 #!/bin/bash
 
-read -p "Apps without uninstall.sh will not be removed, are you sure you want to uninstall appman now? (y/n) " confirm
+read -p "Apps without uninstall.sh may need manual uninstallation, are you sure you want to uninstall appman now? (y/n) " confirm
 
 if [[ $confirm != "y" ]]; then
   echo "Uninstallation cancelled."

@@ -94,7 +94,7 @@ Components:<br>
 <br>
 run = the script's filename inside appman/bin/ to launch the application and apply settings changes<br>
 name = name of the application displayed on the gui<br>
-program_name = name of the process running in shell, the main one should be enough<br>
+program_name = The name of the process running in the shell. If multiple processes exist, provide the one that always runs while the application is active.<br>
 description = short description about the application<br>
 settings(optional) = create a .sh settings launcher, input the relative path from your projects directory in app to your settings ".sh" launcher<br>
 
@@ -109,4 +109,4 @@ Here again you create a .sh as launcher for your settings manager application.<b
 
 ## Recommended
 Put all your application's necessary dependencies inside of /appman/apps.
-Add an uninstall.sh inside of /appman/apps/your_application_name
+Copy your an uninstall.sh inside of /appman/apps/your_application_name, make it terminate active processes if any

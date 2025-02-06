@@ -1,22 +1,39 @@
-import uvicorn
 import logging
+import uvicorn
+from fastapi import FastAPI
+from fastapi.responses import Response, JSONResponse
 
 from utils import isBinary
 from const import HOST, PORT, Paths
 from appman import AppMan
-from fastapi import FastAPI
-from fastapi.responses import Response, JSONResponse
-
-app = FastAPI()
-appman: AppMan = AppMan()
 
 logging.basicConfig(
     level=logging.DEBUG,
     handlers=[
-        logging.FileHandler(Paths.LOG_DIR.value + ".logger.log", mode="w"),
+        logging.FileHandler(Paths.LOG_DIR.value + "logger.log", mode="w"),
         logging.StreamHandler()
     ]
 )
+
+uvicorn_logger = logging.getLogger("fastapi")
+uvicorn_logger.setLevel(logging.DEBUG)
+uvicorn_logger.addHandler(logging.FileHandler(Paths.LOG_DIR.value + "logger.log", mode="w"))
+uvicorn_logger.addHandler(logging.StreamHandler())
+
+uvicorn_logger = logging.getLogger("uvicorn")
+uvicorn_logger.setLevel(logging.DEBUG)
+uvicorn_logger.addHandler(logging.FileHandler(Paths.LOG_DIR.value + "logger.log", mode="w"))
+uvicorn_logger.addHandler(logging.StreamHandler())
+
+uvicorn_error_logger = logging.getLogger("uvicorn.error")
+uvicorn_error_logger.setLevel(logging.DEBUG)
+uvicorn_error_logger.addHandler(logging.FileHandler(Paths.LOG_DIR.value + "logger.log", mode="w"))
+uvicorn_error_logger.addHandler(logging.StreamHandler())
+
+logging.info("logger initialized")
+
+appman: AppMan = AppMan()
+app = FastAPI()
 
 @app.get("/help")
 def home():
@@ -57,7 +74,8 @@ def deactivate(name: str):
     return Response(content=f"{name} deactivated", status_code=200)
 
 def main():
-    uvicorn.run("api:app", host=HOST , port=PORT, reload=True)
+    logging.info("starting api at {HOST}:{PORT}")
+    uvicorn.run("api:app", host=HOST , port=PORT, reload=True, log_config=None)
 
 if __name__ == "__main__":
     main()

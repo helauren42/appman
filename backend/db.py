@@ -51,8 +51,6 @@ class AbstractDatabase():
         result = subprocess.run(["ls -d */"], shell=True, capture_output=True, text=True, cwd=Paths.APPS_DIR.value)
         logging.info(f"Application directories found: {result.stdout}")
         if result.stdout is None or result.stdout == "":
-            logging.info(f"Application directories found: {result.stdout}")
-        if result.stdout is None or result.stdout == "":
             return None
         app_dir_names = result.stdout.split()
         for app_dir in app_dir_names:
@@ -61,7 +59,7 @@ class AbstractDatabase():
                 with open(os.path.join(Paths.APPS_DIR.value + app_dir + "metadata.json"), "r") as file:
                     data = json.load(file)
                     logging.debug(f"metadata: {data}")
-                    if "run" not in data or "name" not in data or "description" not in data:
+                    if "run" not in data or "name" not in data or "description" or "program_name" not in data:
                         logging.warning(f'metadata.json format not valid, could not find one of "run", "name", "description" elements')
                     settings = None if "settings" not in data else data["settings"]
                     app = App(data["run"], data["program_name"], data["description"], settings)

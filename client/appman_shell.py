@@ -8,14 +8,10 @@ import json
 import signal
 
 from basic_cli import Parser, output, makeRequest, process_args
-from const import Paths
-
-PROMPT = "appman$>"
-HOST = "127.0.0.1"
-PORT = 5698
+from const import Paths, HOST, PORT, PROMPT, GOODBYE_MSG
 
 def handler(signum, frame):
-    print("Goodbye, see you later!")
+    print(GOODBYE_MSG)
     sys.exit(0)
 
 signal.signal(signal.SIGINT, handler)
@@ -27,7 +23,7 @@ def main():
         try:
             read = input().strip()
         except:
-            print("")
+            print(GOODBYE_MSG)
             sys.exit(0)
         if read == "clear":
             res = subprocess.run(["clear"], capture_output=True, text=True)
