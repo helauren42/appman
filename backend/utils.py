@@ -23,6 +23,5 @@ def isBinary(filename: str, blocksize=1024):
 def buildDirectories():
     logging.info("buildDirectories")
     os.system("mkdir -p " + Paths.APPS_DIR.value)
-    os.system("mkdir -p " + Paths.LOG_DIR.value)
     os.system("mkdir -p " + Paths.DB_DIR.value)
     os.system("mkdir -p " + Paths.RUN_DIR.value)
