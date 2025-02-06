@@ -1,5 +1,18 @@
 #!/bin/bash
 
+read -p "Apps without uninstall.sh will not be removed, are you sure you want to uninstall appman now? (y/n) " confirm
+
+if [[ $confirm != "y" ]]; then
+  echo "Uninstallation cancelled."
+  exit 0
+fi
+
+for app in $HOME/.local/appman/apps/*; do
+  if [[ -f "$app/uninstall.sh" ]]; then
+    "$app/uninstall.sh"
+  fi
+done
+
 echo "Uninstalling appman..."
 
 echo "Stopping appman_api service..."
