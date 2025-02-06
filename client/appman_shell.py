@@ -14,14 +14,29 @@ PROMPT = "appman$>"
 HOST = "127.0.0.1"
 PORT = 5698
 
-def sigterm_handler(signum, frame):
-    sys.exit(1)
+def handler(signum, frame):
+    print("Goodbye, see you later!")
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, handler)
 
 def main():
-    signal.signal(signal.SIGTERM, sigterm_handler)
+    print("Welcome to AppMan your favourite app manager!")
     while True:
         print(PROMPT, end=" ")
-        read = input().strip()
+        try:
+            read = input().strip()
+        except:
+            print("")
+            sys.exit(0)
+        if read == "clear":
+            res = subprocess.run(["clear"], capture_output=True, text=True)
+            if res.stdout is not None:
+                print(res.stdout, end="")
+            if res.stderr is not None:
+                print(res.stderr, end="")
+            print("")
+            continue
         mode, parsed = ("", {})
         try:
             mode, parsed = Parser.parse(read.split())
@@ -33,18 +48,16 @@ def main():
             process_args(parsed)
         else:
             try:
-                print("path: ", Paths.RUN_DIR.value)
-                print("parsed: ", parsed)
                 path = Paths.RUN_DIR.value + parsed[0]
                 if len(parsed) > 1:
                     cmd = [path] + parsed[1:]
                 else:
                     cmd = [path]
-                print("cmd: ", cmd)
                 result = subprocess.run(cmd, capture_output=True, text=True)
-                print(result.stdout, end="")
-                print(result.stderr, end="")
-                print("\n", end="")
+                if result.stdout is not None:
+                    print(result.stdout, end="")
+                if result.stderr is not None:
+                    print(result.stderr)
             except Exception as e:
                 print(f"Error: {e}")
 

@@ -114,8 +114,8 @@ class output(ABC):
 def makeRequest(method: str, url):
     try:
         response = requests.request(method, url)
-        print(f"response: {response}")
     except Exception as e:
+        print(f"{response.status_code}")
         print(f"Request failed: {e}")
         raise
     return response

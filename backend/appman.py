@@ -9,8 +9,6 @@ from const import HOST, PORT, Paths
 from utils import buildDirectories, isBinary, isRunning
 from db import Database
 
-# GLOBALS
-
 class AbstractAppMan(ABC):
     def startApp(self, script_name: str, program_name: str):
         logging.debug(f"Start app called for {Paths.RUN_DIR.value + script_name}")
