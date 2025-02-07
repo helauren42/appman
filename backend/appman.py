@@ -18,7 +18,7 @@ class AbstractAppMan(ABC):
         else:
             if not isRunning(program_name=program_name):
                 path = Paths.RUN_DIR.value + script_name
-                subprocess.run([path, "--activate"], start_new_session=True, close_fds=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
+                subprocess.run([path, "--activate"], close_fds=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stdin=subprocess.DEVNULL)
                 logging.info(f"Started application: {script_name} succesfully")
             else:
                 logging.info(f"Application {script_name} already running so not started")

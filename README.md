@@ -110,3 +110,4 @@ Here again you create a .sh as launcher for your settings manager application.<b
 ## Recommended
 Put all your application's necessary dependencies inside of /appman/apps.
 Copy your an uninstall.sh inside of /appman/apps/your_application_name, make it terminate active processes if any
+

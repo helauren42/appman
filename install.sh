@@ -9,7 +9,7 @@ echo "The appman_api service will be installed in $HOME/.config/systemd/user/app
 echo "creating app root directory"
 mkdir $APP_PATH
 
-ECHO "creating logger directory"
+echo "creating logger directory"
 mkdir $APP_PATH/logger
 
 echo "adding appman binary"

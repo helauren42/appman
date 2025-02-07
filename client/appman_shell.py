@@ -6,9 +6,18 @@ import subprocess
 from abc import ABC, abstractstaticmethod
 import json
 import signal
+import logging
 
 from basic_cli import Parser, output, makeRequest, process_args
 from const import Paths, HOST, PORT, PROMPT, GOODBYE_MSG
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    handlers=[
+        logging.FileHandler(Paths.LOG_DIR.value + "cli.log", mode="w"),
+        logging.StreamHandler()
+    ]
+)
 
 def handler(signum, frame):
     print(GOODBYE_MSG)
