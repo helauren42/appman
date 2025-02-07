@@ -115,9 +115,9 @@ def makeRequest(method: str, url):
     try:
         response = requests.request(method, url)
     except Exception as e:
-        print(f"{response.status_code}")
         print(f"Request failed: {e}")
-        raise
+        print(f"Make sure service appman_api is running, run \"systemctl --user status appman_api.service\"")
+        sys.exit(1)
     return response
 
 def process_args(args: dict[str, dict]):
