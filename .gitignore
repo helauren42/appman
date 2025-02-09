@@ -1,6 +1,4 @@
 logger.log
 __pycache__
 data
-bin
 apps
-Makefile

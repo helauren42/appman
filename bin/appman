@@ -1,0 +1,4 @@
+#!/bin/bash
+
+APP_PATH="$HOME/.local/appman"
+python3 $APP_PATH/client/appman_shell.py
