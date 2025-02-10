@@ -51,7 +51,7 @@ class Parser():
             Parser.print_appman_help()
             raise Exception("help")
 
-        if args[0] == "list":
+        if args[0] == "list" or args[0] == "ls":
             ret["list"]["on"] = True
         elif args[0] == "refresh":
             ret["refresh"]["on"] = True

@@ -7,6 +7,7 @@ from abc import ABC, abstractstaticmethod
 import json
 import signal
 import logging
+import readline
 
 from basic_cli import Parser, output, makeRequest, processArgs, getPairs
 from const import Paths, HOST, PORT, PROMPT, GOODBYE_MSG
@@ -43,9 +44,8 @@ def main():
     print("Welcome to AppMan your favourite app manager!")
     pairs = getPairs()
     while True:
-        print(PROMPT, end=" ")
         try:
-            read = input().strip()
+            read = input(PROMPT).strip()
         except:
             print(GOODBYE_MSG)
             sys.exit(0)
