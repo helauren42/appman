@@ -47,7 +47,7 @@ class Parser():
             "deactivate": struct.copy()
             }
         mode = Parser.parsedMode.APPMAN
-        if not args or args[0] == "" or help in args:
+        if not args or args[0] == "" or "help" in args:
             Parser.print_appman_help()
             raise Exception("help")
 
@@ -110,6 +110,12 @@ class output(ABC):
     def deactivate(response):
         print(f'{response.content.decode('utf-8')}')
         print(f"Status code: {response.status_code}")
+
+def getPairs() -> dict:
+    response = makeRequest("GET", f"http://{HOST}:{PORT}/pairs")
+    content = response.content.decode('utf-8')
+    temp = json.loads(content)
+    return temp
 
 def makeRequest(method: str, url):
     try:

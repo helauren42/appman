@@ -8,7 +8,7 @@ import json
 import signal
 import logging
 
-from basic_cli import Parser, output, makeRequest, process_args
+from basic_cli import Parser, output, makeRequest, process_args, getPairs
 from const import Paths, HOST, PORT, PROMPT, GOODBYE_MSG
 
 logging.basicConfig(
@@ -20,13 +20,28 @@ logging.basicConfig(
 )
 
 def handler(signum, frame):
-    print(GOODBYE_MSG)
     sys.exit(0)
 
 signal.signal(signal.SIGINT, handler)
+    
+pairs = {}    
+
+def getCmd(parsed: list) -> str:
+    global pairs
+    run_file = parsed[0]
+    if run_file in pairs:
+        run_file = pairs[run_file]
+    path = Paths.RUN_DIR.value + run_file
+    if len(parsed) > 1:
+        cmd = [path] + parsed[1:]
+    else:
+        cmd = [path]
+    return " ".join(cmd)
 
 def main():
+    global pairs
     print("Welcome to AppMan your favourite app manager!")
+    pairs = getPairs()
     while True:
         print(PROMPT, end=" ")
         try:
@@ -46,25 +61,23 @@ def main():
         try:
             mode, parsed = Parser.parse(read.split())
         except Exception as e:
-            if e != "help":
+            if str(e) != "help":
                 print(f"Error: {e}")
             continue
         if mode == Parser.parsedMode.APPMAN:
             process_args(parsed)
         else:
             try:
-                path = Paths.RUN_DIR.value + parsed[0]
-                if len(parsed) > 1:
-                    cmd = [path] + parsed[1:]
-                else:
-                    cmd = [path]
-                result = subprocess.run(cmd, capture_output=True, text=True)
+                pairs = getPairs()
+                cmd = getCmd(parsed)
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
                 if result.stdout is not None:
                     print(result.stdout, end="")
                 if result.stderr is not None:
                     print(result.stderr)
             except Exception as e:
-                print(f"Error: {e}")
+                print("Error: Not a valid appman command")
+                print(f"{e}")
 
 if __name__ == "__main__":
     main()
