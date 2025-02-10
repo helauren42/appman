@@ -12,6 +12,10 @@ mkdir $APP_PATH
 echo "creating logger directory"
 mkdir $APP_PATH/logger
 
+echo "adding python environment"
+cp ./requirements.txt $APP_PATH/requirements.txt
+python3 -m venv $APP_PATH/venv
+
 echo "adding appman binary"
 cp ./bin/appman $HOME/.local/bin/appman
 chmod u+x $HOME/.local/bin/appman
@@ -43,10 +47,11 @@ mkdir -p $HOME/.config/systemd/user/
 
 echo "starting appman_api as a user service"
 systemctl --user daemon-reload
-systemctl --user start appman_api.service
 systemctl --user enable appman_api.service
+systemctl --user start appman_api.service
 
-echo "Run \"systemctl --user status appman_api.service\" and \"systemctl --user is-enabled appman_api.service\" to make sure the appman_api service is running"
-echo "in case of issues run \"journalctl --user -xe appman_api.service\""
+echo 'Run "systemctl --user status appman_api.service" and "systemctl --user is-enabled appman_api.service" to make sure the appman_api service is running'
+echo 'in case of issues run "journalctl --user -xe appman_api.service"'
 
 echo "Installation complete"
+
