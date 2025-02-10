@@ -80,6 +80,7 @@ class output(ABC):
             data = json.loads(content)
             for key, value in data.items():
                 print("-" * 80)
+                print(f'ID: {value["id"]}')
                 print(f"APP: {key}")
                 print(f"Run: {value["run"]}")
                 print(f"Program Name: {value["program_name"]}")
@@ -126,7 +127,8 @@ def makeRequest(method: str, url):
         sys.exit(1)
     return response
 
-def process_args(args: dict[str, dict]):
+def processArgs(args: dict[str, dict], pairs):
+    logging.info(f"2 pairs: {pairs}")
     if args["list"]["on"]:
         response = makeRequest("GET", f'http://{HOST}:{PORT}/list')
         output.list(response=response)
@@ -134,9 +136,19 @@ def process_args(args: dict[str, dict]):
         response = makeRequest("POST", f'http://{HOST}:{PORT}/refresh')
     elif args["activate"]["on"]:
         for arg in args["activate"]["arg"]:
+            if arg in pairs:
+                if arg.isdigit():
+                    arg = pairs[arg][1]
+                else:
+                    arg = pairs[arg][0]
             response = makeRequest("POST", f'http://{HOST}:{PORT}/activate/{arg}')
             output.activate(response=response)
     elif args["deactivate"]["on"]:
         for arg in args["deactivate"]["arg"]:
+            if arg in pairs:
+                if arg.isdigit():
+                    arg = pairs[arg][1]
+                else:
+                    arg = pairs[arg][0]
             response = makeRequest("POST", f'http://{HOST}:{PORT}/deactivate/{arg}')
         output.deactivate(response=response)

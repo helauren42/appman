@@ -35,29 +35,30 @@ logging.info("logger initialized")
 appman: AppMan = AppMan()
 app = FastAPI()
 
-@app.get("/help")
+@app.get("/pairs")
 def home():
-    logging.info("request to /help")
-    return ("hello world")
+    logging.info("get request to /pairs")
+    return JSONResponse(status_code=200, content=appman.ApiRequests("pairs"))
 
 @app.get("/list")
 def list():
-    logging.info("request to /list")
+    logging.info("get request to /list")
     return JSONResponse(status_code=200, content=appman.ApiRequests("list"))
 
 @app.post("/refresh")
 def refresh():
     global appman
-    logging.info("request to /refresh")
+    logging.info("post request to /refresh")
     try:
         appman = AppMan()
+        # appman.refreshApps()
     except Exception as e:
         return Response(status_code=500, content=f"{e}")
     return Response(status_code=200)
 
 @app.post("/activate/{name}")
 def activate(name: str):
-    logging.info(f"request to /activate/{name}")
+    logging.info(f"post request to /activate/{name}")
     try:
         appman.ApiRequests("activate", name)
     except Exception as e:
@@ -66,7 +67,7 @@ def activate(name: str):
 
 @app.post("/deactivate/{name}")
 def deactivate(name: str):
-    logging.info(f"request to /deactivate/{name}")
+    logging.info(f"post request to /deactivate/{name}")
     try:
         appman.ApiRequests("deactivate", name)
     except Exception as e:
@@ -74,7 +75,7 @@ def deactivate(name: str):
     return Response(content=f"{name} deactivated", status_code=200)
 
 def main():
-    logging.info("starting api at {HOST}:{PORT}")
+    logging.info(f"starting api at {HOST}:{PORT}")
     uvicorn.run("api:app", host=HOST , port=PORT, reload=True, log_config=None)
 
 if __name__ == "__main__":

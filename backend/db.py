@@ -12,18 +12,20 @@ class App():
     def __str__(self):
         return (f'active: {self.active}, run: {self.run}, description: {self.description}, settings: {self.settings}')
 
-    def __init__(self, _run, _program_name, _description, _settings=None):
+    def __init__(self, _id, _run, _program_name, _description, _settings=None):
+        self.id : int = _id
         self.run: str = _run
         self.program_name = _program_name
         self.description: str = _description
         self.active: bool = False
         self.settings: Optional[str] = _settings # .sh
-    
+
     def setActive(self, _active: bool):
         self.active = _active
-        
+
     def to_dict(self):
         return {
+            "id":self.id,
             "description":self.description,
             "run":self.run,
             "program_name":self.program_name,
@@ -45,7 +47,7 @@ class AbstractDatabase():
         rows = self.cursor.execute("SELECT name, active FROM applications ORDER BY name ASC")
         for row in rows:
             logging.debug(f'{row[0]}: {row[1]}')
-            
+
     def findLocalApps(self) -> list[App]:
         self.apps = {}
         result = subprocess.run(["ls -d */"], shell=True, capture_output=True, text=True, cwd=Paths.APPS_DIR.value)
@@ -53,6 +55,7 @@ class AbstractDatabase():
         if result.stdout is None or result.stdout == "":
             return None
         app_dir_names = result.stdout.split()
+        id = 0
         for app_dir in app_dir_names:
             # get metadata.json file content for every app dir found
             try:
@@ -62,15 +65,15 @@ class AbstractDatabase():
                     if "run" not in data or "name" not in data or "description" or "program_name" not in data:
                         logging.warning(f'metadata.json format not valid, could not find one of "run", "name", "description" elements')
                     settings = None if "settings" not in data else data["settings"]
-                    app = App(data["run"], data["program_name"], data["description"], settings)
+                    app = App(id, data["run"], data["program_name"], data["description"], settings)
                     name = data["name"]
                     if self.apps.get(name) is not None:
                         logging.warning(f"found duplicate app name: {name}")
                     self.apps[name] = app
             except Exception as e:
                 logging.warning(f"metdata.json error: {e}")
-                logging.warning(f"metdata.json error: {e}")
                 continue
+            id += 1
         if len(self.apps) > 0:
             return self.apps
         if len(self.apps) > 0:
@@ -78,12 +81,6 @@ class AbstractDatabase():
         return None
 
 class Database(AbstractDatabase):
-    def __str__(self):
-        ret = ""
-        for key, app in self.apps.items():
-            ret += f'{key}: {str(app)} + "\n"'
-        return ret
-
     def __str__(self):
         ret = ""
         for key, app in self.apps.items():

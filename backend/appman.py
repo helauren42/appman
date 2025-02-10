@@ -22,7 +22,6 @@ class AbstractAppMan(ABC):
                 logging.info(f"Started application: {script_name} succesfully")
             else:
                 logging.info(f"Application {script_name} already running so not started")
-                # raise Exception(f"{program_name} already running")
 
     def stopApp(self, script_name: str, program_name: str):
         logging.debug(f"Stop app called for {Paths.RUN_DIR.value + script_name}")
@@ -43,7 +42,13 @@ class AppMan(AbstractAppMan):
         self.startActiveApps()
 
     def ApiRequests(self, request: str, arg: Optional[str] = None):
-        if request == "list":
+        if request == "pairs":
+            ret = {}
+            for name, app in self.db.apps.items():
+                ret[name] = [app.run, name]
+                ret[app.id] = [app.run, name]
+            return ret
+        elif request == "list":
             ret = {}
             for name, app in self.db.apps.items():
                 ret[name] = app.to_dict()

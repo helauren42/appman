@@ -8,14 +8,14 @@ import json
 import signal
 import logging
 
-from basic_cli import Parser, output, makeRequest, process_args, getPairs
+from basic_cli import Parser, output, makeRequest, processArgs, getPairs
 from const import Paths, HOST, PORT, PROMPT, GOODBYE_MSG
 
 logging.basicConfig(
     level=logging.DEBUG,
     handlers=[
         logging.FileHandler(Paths.LOG_DIR.value + "cli.log", mode="w"),
-        logging.StreamHandler()
+        # logging.StreamHandler()
     ]
 )
 
@@ -28,9 +28,9 @@ pairs = {}
 
 def getCmd(parsed: list) -> str:
     global pairs
-    run_file = parsed[0]
+    run_file = parsed[0] if not parsed[0].isdigit() else int(parsed[0])
     if run_file in pairs:
-        run_file = pairs[run_file]
+        run_file = pairs[run_file][0]
     path = Paths.RUN_DIR.value + run_file
     if len(parsed) > 1:
         cmd = [path] + parsed[1:]
@@ -65,7 +65,9 @@ def main():
                 print(f"Error: {e}")
             continue
         if mode == Parser.parsedMode.APPMAN:
-            process_args(parsed)
+            pairs = getPairs()
+            logging.info(f"1 pairs: {pairs}")
+            processArgs(parsed, pairs)
         else:
             try:
                 pairs = getPairs()

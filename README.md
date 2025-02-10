@@ -82,6 +82,10 @@ Deactivating:<br>
 appman$> deactivate <program1> <program2> ...<br>
 <br>
 
+4. Clearing terminal
+
+You can call the clear command through appman.
+
 ### add your program's binary or entry point script inside of /appman/bin
 
 Create a bash script that serves as an entry point to your program. With a bash script you can define your arguments, flags and compiler as needed for every language.<br>

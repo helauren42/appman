@@ -1,8 +1,8 @@
 [Unit]
 Description=The API for appman
 [Service]
-ExecStart=/home/minihl/.local/appman/api/appman_api.sh
-WorkingDirectory=/home/minihl/.local/appman/api
+ExecStart=/home/helauren/.local/appman/api/appman_api.sh
+WorkingDirectory=/home/helauren/.local/appman/api
 Restart=always
 [Install]
 WantedBy=default.target
