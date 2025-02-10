@@ -128,7 +128,6 @@ def makeRequest(method: str, url):
     return response
 
 def processArgs(args: dict[str, dict], pairs):
-    logging.info(f"2 pairs: {pairs}")
     if args["list"]["on"]:
         response = makeRequest("GET", f'http://{HOST}:{PORT}/list')
         output.list(response=response)

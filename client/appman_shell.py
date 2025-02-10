@@ -28,7 +28,7 @@ pairs = {}
 
 def getCmd(parsed: list) -> str:
     global pairs
-    run_file = parsed[0] if not parsed[0].isdigit() else int(parsed[0])
+    run_file = parsed[0]
     if run_file in pairs:
         run_file = pairs[run_file][0]
     path = Paths.RUN_DIR.value + run_file
@@ -66,7 +66,6 @@ def main():
             continue
         if mode == Parser.parsedMode.APPMAN:
             pairs = getPairs()
-            logging.info(f"1 pairs: {pairs}")
             processArgs(parsed, pairs)
         else:
             try:
