@@ -69,3 +69,4 @@ class AppMan(AbstractAppMan):
                     self.startApp(app.run, app.program_name)
                 except Exception as e:
                     logging.error(f"Could not execute subprocess to start app: {e}")
+        logging.info(f"end of start active apps")

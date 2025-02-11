@@ -1,3 +1,2 @@
-re:
-	./uninstall.sh
-	./install.sh
+update:
+	./update.sh

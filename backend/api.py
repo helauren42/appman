@@ -11,8 +11,9 @@ logging.basicConfig(
     level=logging.DEBUG,
     handlers=[
         logging.FileHandler(Paths.LOG_DIR.value + "logger.log", mode="w"),
-        logging.StreamHandler()
-    ]
+    ],
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%H:%M:%S"
 )
 
 uvicorn_logger = logging.getLogger("fastapi")
