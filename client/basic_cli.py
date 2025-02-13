@@ -84,11 +84,12 @@ class output(ABC):
                 print(f"APP: {key}")
                 print(f"Run: {value["run"]}")
                 print(f"Program Name: {value["program_name"]}")
-            if value["active"]:
-                print("Status: \033[92mactive\033[0m")
-            else:
-                print("Status: \033[91minactive\033[0m")
-                print(f"Description: {value["description"]}")
+                if value["active"]:
+                    print("Status: \033[92mactive\033[0m")
+                    print(f"Description: {value["description"]}")
+                else:
+                    print("Status: \033[91minactive\033[0m")
+                    print(f"Description: {value["description"]}")
             print("-" * 80)
         else:
             print(f'{response.content}')
