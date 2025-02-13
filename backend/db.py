@@ -46,7 +46,8 @@ class AbstractDatabase():
         logging.debug("Applications table:")
         rows = self.cursor.execute("SELECT name, active FROM applications ORDER BY name ASC")
         for row in rows:
-            logging.debug(f'{row[0]}: {row[1]}')
+            active = "active" if row[1] == 0 else "inactive"
+            logging.debug(f'{row[0]}: {active}')
 
     def findLocalApps(self) -> list[App]:
         self.apps = {}

@@ -5,7 +5,7 @@ import logging
 
 HOST = "127.0.0.1"
 PORT = 5698
-PROMPT = "appman$>"
+PROMPT = "appman$> "
 GOODBYE_MSG = "Goodbye, see you later!"
 
 
