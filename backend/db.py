@@ -99,6 +99,7 @@ class Database(AbstractDatabase):
         self.debugPrintTable()
     
     def activateApp(self, name: str):
+        logging.debug(f"ACTIVATE APP: {name}")
         if self.apps.get(name) is None:
             logging.error("Wrong app name, app not found, could not ativate")
             raise Exception("App not found")
@@ -106,11 +107,14 @@ class Database(AbstractDatabase):
             logging.error(f"{name}: already active")
             raise Exception("Already active")
         logging.info("setting {name}.active to True")
-        self.apps[name].setActive(True)
         self.initDbCursor()
+        logging.debug("PRE activate app")
         self.debugPrintTable()
-        self.cursor.execute("UPDATE applications SET name = ?, active = ?", (name, True))
+        self.apps[name].setActive(True)
+        self.cursor.execute("UPDATE applications SET active = ? WHERE name = ?", (name, True))
         self.connect.commit()
+        logging.debug("End of adding active app")
+        self.debugPrintTable()
 
     def deactivateApp(self, name: str):
         if name not in self.apps:
