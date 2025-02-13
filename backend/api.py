@@ -62,7 +62,7 @@ def activate(name: str):
     try:
         appman.ApiRequests("activate", name)
     except Exception as e:
-        return Response(content=f"Error activating {name}: {e}", status_code=400)
+        return Response(content=f"activating {name}: {e}", status_code=400)
     return Response(content=f"{name} activated", status_code=200)
 
 @app.post("/deactivate/{name}")

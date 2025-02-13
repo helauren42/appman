@@ -62,7 +62,7 @@ class AbstractDatabase():
                 with open(os.path.join(Paths.APPS_DIR.value + app_dir + "metadata.json"), "r") as file:
                     data = json.load(file)
                     logging.debug(f"metadata: {data}")
-                    if "run" not in data or "name" not in data or "description" or "program_name" not in data:
+                    if "run" not in data or "name" not in data or "description" not in data or "program_name" not in data:
                         logging.warning(f'metadata.json format not valid, could not find one of "run", "name", "description" elements')
                     settings = None if "settings" not in data else data["settings"]
                     app = App(id, data["run"], data["program_name"], data["description"], settings)
