@@ -46,7 +46,7 @@ class AbstractDatabase():
         logging.debug("Applications table:")
         rows = self.cursor.execute("SELECT name, active FROM applications ORDER BY name ASC")
         for row in rows:
-            active = "active" if row[1] == 0 else "inactive"
+            active = "active" if row[1] else "inactive"
             logging.debug(f'{row[0]}: {active}')
 
     def findLocalApps(self) -> list[App]:
@@ -102,11 +102,12 @@ class Database(AbstractDatabase):
         logging.debug(f"ACTIVATE APP: {name}")
         if self.apps.get(name) is None:
             logging.error("Wrong app name, app not found, could not ativate")
+            logging.error(f"APPS found: {self.apps}")
             raise Exception("App not found")
         if self.apps[name].active and isRunning(self.apps[name].program_name):
             logging.error(f"{name}: already active")
             raise Exception("Already active")
-        logging.info("setting {name}.active to True")
+        logging.info(f"setting {name}.active to True")
         self.initDbCursor()
         logging.debug("PRE activate app")
         self.debugPrintTable()
