@@ -9,7 +9,7 @@ fi
 
 for app in $HOME/.local/appman/apps/*; do
   if [[ -f "$app/uninstall.sh" ]]; then
-    "$app/uninstall.sh"
+    echo "uninstalling $app" && "$app/uninstall.sh"
   fi
 done
 

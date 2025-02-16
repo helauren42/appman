@@ -51,7 +51,7 @@ def refresh():
     global appman
     logging.info("post request to /refresh")
     try:
-        appman = AppMan()
+        appman.refresh()
     except Exception as e:
         return Response(status_code=500, content=f"{e}")
     return Response(status_code=200)

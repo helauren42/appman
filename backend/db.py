@@ -41,10 +41,12 @@ class AbstractDatabase():
             name TEXT NOT NULL PRIMARY KEY, \
             active BOOLEAN NOT NULL \
         )")
+        self.connect.commit()
 
     def debugPrintTable(self):
         logging.debug("Applications table:")
         rows = self.cursor.execute("SELECT name, active FROM applications ORDER BY name ASC")
+        self.connect.commit()
         for row in rows:
             active = "active" if row[1] else "inactive"
             logging.debug(f'{row[0]}: {active}')
@@ -112,9 +114,9 @@ class Database(AbstractDatabase):
         logging.debug("PRE activate app")
         self.debugPrintTable()
         self.apps[name].setActive(True)
-        self.cursor.execute("UPDATE applications SET active = ? WHERE name = ?", (name, True))
+        self.cursor.execute("UPDATE applications SET active = ? WHERE name = ?", (True, name))
         self.connect.commit()
-        logging.debug("End of adding active app")
+        logging.debug("POST adding active app")
         self.debugPrintTable()
 
     def deactivateApp(self, name: str):
@@ -124,11 +126,11 @@ class Database(AbstractDatabase):
         if self.apps[name].active == False:
             logging.error(f"{name}: already inactive")
             raise Exception("Already inactive")
-        logging.info("setting {name}.active to True")
+        logging.info("setting {name}.active to False")
         self.apps[name].setActive(False)
         self.initDbCursor()
         self.debugPrintTable()
-        self.cursor.execute("UPDATE applications SET name = ?, active = ?", (name, False))
+        self.cursor.execute("UPDATE applications SET active = ? WHERE active = ?", (False, name))
         self.connect.commit()
 
     def updateApps(self):
@@ -150,4 +152,4 @@ class Database(AbstractDatabase):
             if app_name not in db_app_names:
                 logging.debug(f"Inserting {app_name} into db")
                 self.cursor.execute("INSERT INTO applications (name, active) VALUES (?, ?)", (app_name, False))
-            self.connect.commit()
+        self.connect.commit()

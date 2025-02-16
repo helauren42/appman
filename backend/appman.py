@@ -18,7 +18,7 @@ class AbstractAppMan(ABC):
         else:
             if not isRunning(program_name=program_name):
                 path = Paths.RUN_DIR.value + script_name
-                subprocess.Popen([path, "--activate"], close_fds=True, start_new_session=True)
+                subprocess.Popen([path, "--activate"], close_fds=True)
                 logging.info(f"Started application: {script_name} succesfully")
             else:
                 logging.info(f"Application {script_name} already running so not started")
@@ -40,6 +40,10 @@ class AppMan(AbstractAppMan):
         buildDirectories()
         self.db: Database = Database()
         self.startActiveApps()
+
+    def refresh(self):
+        buildDirectories()
+        self.db: Database = Database()        
 
     def ApiRequests(self, request: str, arg: Optional[str] = None):
         if request == "pairs":
