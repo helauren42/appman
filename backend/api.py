@@ -56,6 +56,15 @@ def refresh():
         return Response(status_code=500, content=f"{e}")
     return Response(status_code=200)
 
+@app.post("/restart/{name}")
+def restart(name: str):
+    logging.info(f"post request to /restart/{name}")
+    try:
+        appman.ApiRequests("restart", name)
+    except Exception as e:
+        return Response(content=f"restarting {name}: {e}", status_code=400)
+    return Response(content=f"{name} restarted", status_code=200)    
+
 @app.post("/activate/{name}")
 def activate(name: str):
     logging.info(f"post request to /activate/{name}")

@@ -1,7 +1,6 @@
 from requests import Response
 import requests
 import sys
-import argparse
 import subprocess
 from abc import ABC, abstractstaticmethod
 import json
@@ -16,7 +15,6 @@ logging.basicConfig(
     level=logging.DEBUG,
     handlers=[
         logging.FileHandler(Paths.LOG_DIR.value + "cli.log", mode="w"),
-        # logging.StreamHandler()
     ]
 )
 
@@ -24,8 +22,8 @@ def handler(signum, frame):
     sys.exit(0)
 
 signal.signal(signal.SIGINT, handler)
-    
-pairs = {}    
+
+pairs = {}
 
 def getCmd(parsed: list) -> str:
     global pairs

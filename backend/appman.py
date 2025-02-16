@@ -57,6 +57,11 @@ class AppMan(AbstractAppMan):
             for name, app in self.db.apps.items():
                 ret[name] = app.to_dict()
             return ret
+        elif request == "restart":
+            self.db.deactivateApp(arg)
+            self.stopApp(self.db.apps[arg].run, self.db.apps[arg].program_name)
+            self.db.activateApp(arg)
+            self.startApp(self.db.apps[arg].run, self.db.apps[arg].program_name)
         elif request == "activate":
             self.db.activateApp(arg)
             self.startApp(self.db.apps[arg].run, self.db.apps[arg].program_name)

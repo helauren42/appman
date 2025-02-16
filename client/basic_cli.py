@@ -43,6 +43,7 @@ class Parser():
         struct = {"on":False, "arg": []}
         ret = {"list": struct.copy(),
             "refresh": struct.copy(),
+            "restart": struct.copy(),
             "activate": struct.copy(),
             "deactivate": struct.copy()
             }
@@ -55,6 +56,11 @@ class Parser():
             ret["list"]["on"] = True
         elif args[0] == "refresh":
             ret["refresh"]["on"] = True
+        elif args[0] == "restart":
+            if len(args) <= 1:
+                raise Exception("activate requires arguments")
+            ret["restart"]["on"] = True
+            ret["restart"]["arg"] = args[1:]
         elif args[0] == "activate":
             if len(args) <= 1:
                 raise Exception("activate requires arguments")
@@ -104,6 +110,11 @@ class output(ABC):
             print(f"Status code: {response.status_code}")
 
     @abstractstaticmethod
+    def restart(response):
+        print(f'{response.content.decode('utf-8')}')
+        print(f"Status code: {response.status_code}")
+
+    @abstractstaticmethod
     def activate(response):
         print(f'{response.content.decode('utf-8')}')
         print(f"Status code: {response.status_code}")
@@ -134,6 +145,15 @@ def processArgs(args: dict[str, dict], pairs):
         output.list(response=response)
     elif args["refresh"]["on"]:
         response = makeRequest("POST", f'http://{HOST}:{PORT}/refresh')
+    elif args["restart"]["on"]:
+        for arg in args["restart"]["arg"]:
+            if arg in pairs:
+                if arg.isdigit():
+                    arg = pairs[arg][1]
+                else:
+                    arg = pairs[arg][0]
+                response = makeRequest("POST", f'http://{HOST}:{PORT}/restart/{arg}')
+                output.restart(response=response)
     elif args["activate"]["on"]:
         for arg in args["activate"]["arg"]:
             if arg in pairs:
