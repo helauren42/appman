@@ -52,6 +52,7 @@ systemctl --user start appman_api.service
 
 echo 'Run "systemctl --user status appman_api.service" and "systemctl --user is-enabled appman_api.service" to make sure the appman_api service is running'
 echo 'in case of issues run "journalctl --user -xe appman_api.service"'
+echo "If appman_api.service is runnig but you can't launch appman and connect to the api, waiting a few more seconds should resolve it"
 
 echo "Installation complete"
 

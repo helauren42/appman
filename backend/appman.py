@@ -18,7 +18,7 @@ class AbstractAppMan(ABC):
         else:
             if not isRunning(program_name=program_name):
                 path = Paths.RUN_DIR.value + script_name
-                subprocess.Popen([path, "--activate"], close_fds=True)
+                subprocess.Popen([path, "--activate"], close_fds=True, start_new_session=True)
                 logging.info(f"Started application: {script_name} succesfully")
             else:
                 logging.info(f"Application {script_name} already running so not started")
@@ -33,7 +33,7 @@ class AbstractAppMan(ABC):
                 result = subprocess.run([Paths.RUN_DIR.value + script_name, "--deactivate"], stderr=subprocess.PIPE)
                 logging.info(f"Stopped application: {script_name} succesfully")
             else:
-                logging.info(f"Application {script_name} not running so not stopped")
+                logging.info(f"Application {program_name} not running so not stopped")
 
 class AppMan(AbstractAppMan):
     def __init__(self):

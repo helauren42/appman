@@ -5,7 +5,7 @@ import logging
 import subprocess
 
 def isRunning(program_name: str) -> bool:
-    result = subprocess.run([f"ps aux | grep {program_name} | grep -v grep | grep -v appman_cli.py"], shell=True, capture_output=True, text=True)
+    result = subprocess.run([f'ps aux | grep {program_name} | grep -v grep | grep -v "<defunct>" | grep -v appman_cli.py'], shell=True, capture_output=True, text=True)
     if result.stdout == "":
         return False
     return True
