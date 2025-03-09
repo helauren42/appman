@@ -47,8 +47,8 @@ mkdir -p $HOME/.config/systemd/user/
 
 echo "starting appman_api as a user service"
 systemctl --user daemon-reload
-systemctl --user enable appman_api.service
 systemctl --user start appman_api.service
+systemctl --user enable appman_api.service
 
 echo 'Run "systemctl --user status appman_api.service" and "systemctl --user is-enabled appman_api.service" to make sure the appman_api service is running'
 echo 'in case of issues run "journalctl --user -xe appman_api.service"'

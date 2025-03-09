@@ -1,1 +1,8 @@
-
+[Unit]
+Description=The API for appman
+[Service]
+ExecStart=/home/henri/.local/appman/api/appman_api.sh
+WorkingDirectory=/home/henri/.local/appman/api
+Restart=always
+[Install]
+WantedBy=default.target
