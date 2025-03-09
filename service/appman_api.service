@@ -3,6 +3,7 @@ Description=The API for appman
 [Service]
 ExecStart=/home/henri/.local/appman/api/appman_api.sh
 WorkingDirectory=/home/henri/.local/appman/api
+Environment='PATH=/home/henri/.local/appman/venv/bin:/home/henri/.local/bin:/usr/bin:/bin'
 Restart=always
 [Install]
 WantedBy=default.target

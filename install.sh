@@ -23,6 +23,7 @@ chmod u+x $HOME/.local/bin/appman
 echo "adding appman_api files"
 mkdir $APP_PATH/api
 cp ./api/appman_api.sh $APP_PATH/api/appman_api.sh
+echo "python3 $HOME/.local/appman/backend/api.py" >> $APP_PATH/api/appman_api.sh
 cp -r backend/ $APP_PATH/backend
 
 echo "adding appman CLI files"
@@ -35,6 +36,7 @@ echo "Description=The API for appman" >> service/appman_api.service
 echo "[Service]" >> service/appman_api.service
 echo "ExecStart=$HOME/.local/appman/api/appman_api.sh" >> service/appman_api.service
 echo "WorkingDirectory=$HOME/.local/appman/api" >> service/appman_api.service
+echo "Environment='PATH=$HOME/.local/appman/venv/bin:$HOME/.local/bin:/usr/bin:/bin'" >> service/appman_api.service
 echo "Restart=always" >> service/appman_api.service
 
 echo "[Install]" >> service/appman_api.service
@@ -47,12 +49,15 @@ mkdir -p $HOME/.config/systemd/user/
 
 echo "starting appman_api as a user service"
 systemctl --user daemon-reload
+sleep 2
 systemctl --user start appman_api.service
 systemctl --user enable appman_api.service
 
+echo "Installation complete\n"
+
 echo 'Run "systemctl --user status appman_api.service" and "systemctl --user is-enabled appman_api.service" to make sure the appman_api service is running'
 echo 'in case of issues run "journalctl --user -xe appman_api.service"'
-echo "If appman_api.service is runnig but you can't launch appman and connect to the api, waiting a few more seconds should resolve it"
+echo "If appman_api.service is runnig but you can't launch appman and connect to the api, waiting a few more seconds should resolve it\n"
 
-echo "Installation complete"
+systemctl --user status appman_api.service
 
